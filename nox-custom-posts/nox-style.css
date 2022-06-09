@@ -64,7 +64,7 @@ max-height: 50px;
     line-height: 100%;
     text-align: center;
     font-size: 12px;
-    background-color: #2c2c2c;
+
     
 }
 }
@@ -79,3 +79,9 @@ div[id^="gallery-"] .gallery-caption {
     display: none;
 }
 
+.nox-item {
+    margin: 7px;
+    width: 150px;
+    float: left;
+    height: 238px;
+}

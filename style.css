@@ -32,8 +32,13 @@ a {
 
 .footer {
 width: 700px;
+
 }
 #nav {
 	width: 500px;
 	margin: 0 auto;
+}
+
+hr {
+	width: 100%;
 }

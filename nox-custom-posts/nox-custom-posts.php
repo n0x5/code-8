@@ -438,37 +438,7 @@ add_filter('upload_mimes', 'zip_upload_mimes', 999, 1);
 
 add_theme_support( 'post-thumbnails' );
 
-/**
- * Auto add subpages to nav menus
- */
-function custom_walker_nav_menu_start_el ( $item_output, $item, $depth, $args) {
- 
-    // filter only page menu items
-    if( $item->object == 'page' ) {
-     
-        // set args
-        $args = array( 
-            'depth' => 0,
-            'child_of' => $item->object_id,
-            'echo' => 0, 
-            'title_li' => ''
-            );
-         
-        // check for children
-        $children = wp_list_pages( $args );
-		
- 
-        // append them as list if any
-        if ( $children )
-            $item_output = $item_output . '<ul class="children" >' . $children . '</ul>';
-     
-    }
-     
-    return $item_output;
-     
-}
- 
-add_filter( 'walker_nav_menu_start_el', 'custom_walker_nav_menu_start_el', 10, 4 );
+
 
 function breadcrumb_links($content) {
     $parents = get_post_ancestors( $post->ID );
@@ -532,7 +502,7 @@ add_action( 'widgets_init', 'code2center_widgets_init_german' );
 #### can be easily used to create galleries with sub galleries
 
 function n0x5_gallery() {
-    $pages = get_pages(array('parent'  => get_the_id()));
+    $pages = get_pages(array('parent'  => get_the_id(), 'post_status' => array('publish', 'private')));
     $result = wp_list_pluck( $pages, 'ID' );
     foreach ($result as $thumb) {
         $perma = get_permalink($thumb);
@@ -541,7 +511,7 @@ function n0x5_gallery() {
         $sizes = wp_get_registered_image_subsizes();
         $img_width = $sizes['thumbnail']['width'];
         if (!empty(get_the_post_thumbnail($thumb, 'thumbnail') )) {
-            $thumb = '<div class="nox-item" style="width:'.$img_width.'px;float:left;height:200px;"><div class="n0x-lnk"><a href="'.$perma.'">'.$thumbnail.'</a></div><div class="n0x-title"><a href="'.$perma.'">'.$title.'</a></div></div>';
+            $thumb = '<div class="nox-item"><div class="n0x-lnk"><a href="'.$perma.'">'.$thumbnail.'</a></div><div class="n0x-title"><a href="'.$perma.'">'.$title.'</a></div></div>';
             $lnks = $lnks . $thumb;
         }
         else {
@@ -549,7 +519,7 @@ function n0x5_gallery() {
 			$lnks = $lnks . $thumb;
         }
     }
-    return $lnks;
+    return '<div class="stuf">' . $lnks . '</div>';
 }
 add_shortcode('noxindex', 'n0x5_gallery');
 
@@ -585,7 +555,7 @@ function n0x5_imdb($atts = [], $content = null, $tag = '') {
                 $fil = $fil .  '<a href="https://hidden.machinecode.org/static/flm_images/' .  $file_final[8] . '/' . $file_final[9] . '"><img src="https://hidden.machinecode.org/static/flm_images/' . $file_final[8] . '/' . $file_final[9] . '" width="90" /></a>';
         	}
         }
-    return $final_value . '<br>' . $fil;
+    return '<div class="galstuff">' . $final_value . '<br>' . $fil . '</div>';
 }
 add_shortcode('noximdb', 'n0x5_imdb');
 
