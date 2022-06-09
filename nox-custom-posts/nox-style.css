@@ -85,3 +85,7 @@ div[id^="gallery-"] .gallery-caption {
     float: left;
     height: 238px;
 }
+.sep3 {
+	display: inline;
+	color: red;
+}

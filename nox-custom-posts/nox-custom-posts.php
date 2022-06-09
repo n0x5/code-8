@@ -172,41 +172,7 @@ function custom_gallery($attr) {
     return $output;
 }
 
-/*
-function wp78649_extend_search( $query ) {
-    $search_term = filter_input( INPUT_GET, 's', FILTER_SANITIZE_NUMBER_INT) ?: 0;
-    if (
-        $query->is_search
-        && !is_admin()
-        && $query->is_main_query()
-        // && your extra condition
-    ) {
-        $query->set('meta_query', [
-            [
-                'key' => 'meta_key',
-                'value' => $search_term,
-                'compare' => '='
-            ]
-        ]);
 
-        add_filter( 'get_meta_sql', function( $sql )
-        {
-            global $wpdb;
-
-            static $nr = 0;
-            if( 0 != $nr++ ) return $sql;
-
-            $sql['where'] = mb_eregi_replace( '^ AND', ' OR', $sql['where']);
-
-            return $sql;
-        });
-    }
-    return $query;
-}
-
-add_action( 'pre_get_posts', 'wp78649_extend_search');
-
-*/
 
 add_filter('wp_generate_attachment_metadata', 'add_metac', 10, 2);
 
@@ -401,40 +367,7 @@ add_action( 'publish_page', 'post_static_save', 10, 2 );
 
 add_filter( 'wp_lazy_loading_enabled', '__return_false' );
 
-function akv3_query_format_standard($query) {
-    if (isset($query->query_vars['post_format']) &&
-        $query->query_vars['post_format'] == 'post-format-standard') {
-        if (($post_formats = get_theme_support('post-formats')) &&
-            is_array($post_formats[0]) && count($post_formats[0])) {
-            $terms = array();
-            foreach ($post_formats[0] as $format) {
-                $terms[] = 'post-format-'.$format;
-            }
-            $query->is_tax = null;
-            unset($query->query_vars['post_format']);
-            unset($query->query_vars['taxonomy']);
-            unset($query->query_vars['term']);
-            unset($query->query['post_format']);
-            $query->set('tax_query', array(
-                'relation' => 'AND',
-                array(
-                    'taxonomy' => 'post_format',
-                    'terms' => $terms,
-                    'field' => 'slug',
-                    'operator' => 'NOT IN'
-                )
-            ));
-        }
-    }
-}
-add_action('pre_get_posts', 'akv3_query_format_standard');
 
-function zip_upload_mimes($existing_mimes = array()) {
-    $existing_mimes['zip'] = 'application/zip';
-    $existing_mimes['gz'] = 'application/x-gzip';
-    return $existing_mimes;
-}
-add_filter('upload_mimes', 'zip_upload_mimes', 999, 1);
 
 add_theme_support( 'post-thumbnails' );
 
@@ -469,31 +402,7 @@ function breadcrumb_links($content) {
 
 add_filter('the_content', 'breadcrumb_links');
 
-function code2center_widgets_init() {
-    register_sidebar( array(
-        'name'          => __( 'Sidebar 1', 'code2center' ),
-        'id'            => 'sidebar-1',
-        'description'   => __( 'Add widgets here to appear in your sidebar.', 'code2center' ),
-        'before_widget' => '<aside id="%1$s" class="widget %2$s">',
-        'after_widget'  => '</aside>',
-        'before_title'  => '<h2 class="widget-title">',
-        'after_title'   => '</h2>',
-    ) );
-}
-add_action( 'widgets_init', 'code2center_widgets_init' );
 
-function code2center_widgets_init_german() {
-    register_sidebar( array(
-        'name'          => __( 'German sidebar', 'code2center' ),
-        'id'            => 'sidebar-german',
-        'description'   => __( 'Add widgets here to appear in your sidebar.', 'code2center' ),
-        'before_widget' => '<aside id="%1$s" class="widget %2$s">',
-        'after_widget'  => '</aside>',
-        'before_title'  => '<h2 class="widget-title">',
-        'after_title'   => '</h2>',
-    ) );
-}
-add_action( 'widgets_init', 'code2center_widgets_init_german' );
 
 
 #### Gallery Index page shortcode
@@ -507,9 +416,8 @@ function n0x5_gallery() {
     foreach ($result as $thumb) {
         $wp_query2 = new WP_Query(array(
             'post_parent' => $thumb,
-            'post_type' => 'attachment',
-            'post_status' => 'inherit',
-            'post_mime_type' => 'image'
+            'post_type' => array('attachment', 'page'),
+            'post_status' => 'any'
             ));
         $count = $wp_query2->found_posts;
         $perma = get_permalink($thumb);
@@ -518,8 +426,10 @@ function n0x5_gallery() {
         $sizes = wp_get_registered_image_subsizes();
         $img_width = $sizes['thumbnail']['width'];
         if (!empty(get_the_post_thumbnail($thumb, 'thumbnail') )) {
-            $thumb = '<div class="nox-item"><div class="n0x-lnk"><a href="'.$perma.'">'.$thumbnail.'</a></div><div class="n0x-title"><a href="'.$perma.'">'.$title . ' <br>(' . $count .  ' items)</a></div></div>';
+          $thumb = '<div class="nox-item"><div class="n0x-lnk"><a href="'.$perma.'">'.$thumbnail.'</a></div><div class="n0x-title"><a href="'.$perma.'">'.$title . ' <br>(' . $count .  ' items)</a></div></div>';
+
             $lnks = $lnks . $thumb;
+			
         }
         else {
             $thumb = '<a href="'.$perma.'">'.$title.'</a><br>';
@@ -568,26 +478,20 @@ add_shortcode('noximdb', 'n0x5_imdb');
 
 
 
-
-
 function dawn_content_filter( $content ) {
     return html_entity_decode( $content );
 }
 add_filter( 'the_content', 'dawn_content_filter', 1 );
 
-
-function n0x5_github($atts = [], $content = null, $tag = '') {
-$user = $atts['user'];
-$options  = array('http' => array('user_agent' => 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.75 Safari/537.36'));
-$context  = stream_context_create($options);
-$g_url = 'https://api.github.com/users/' . $user . '/repos';
-$response = file_get_contents($g_url, true, $context);
-$obj = json_decode($response);
-foreach ( $obj as $item ) {
-    //$created = str_replace(str_split('ZT'), ' ', $item->created_at);
-    $url = '<a href="' . $item->html_url . '">' . $item->name . '</a>  Created:' . $item->created_at . '<br>';
-    $final_u = $final_u . $url;
+function code2center_widgets_init() {
+    register_sidebar( array(
+        'name'          => __( 'Sidebar 1', 'code2center' ),
+        'id'            => 'sidebar-1',
+        'description'   => __( 'Add widgets here to appear in your sidebar.', 'code2center' ),
+        'before_widget' => '<aside id="%1$s" class="widget %2$s">',
+        'after_widget'  => '</aside>',
+        'before_title'  => '<h2 class="widget-title">',
+        'after_title'   => '</h2>',
+    ) );
 }
-return '<h1>Repositories for user ' . $user . '</h1><br>' . $final_u;
-}
-add_shortcode('ghuser', 'n0x5_github');
+add_action( 'widgets_init', 'code2center_widgets_init' );
