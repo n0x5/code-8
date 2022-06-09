@@ -1,0 +1,39 @@
+/*
+Theme Name: Code 8
+Theme URI: https://wordpress.org/themes/code8/
+Author: nox
+Author URI: https://wordpress.org/
+Description: Renewal
+Version: 1.0
+*/
+
+#content {
+    width: 800px;
+    margin: 0 auto;
+}
+
+ul {
+  list-style-type: none;
+}
+li {
+  display: inline;
+}
+
+#sidebar {
+    width: 900px;
+    margin: 0 auto;
+}
+a {
+    text-decoration: none;
+}
+.menu-item {
+    padding: 3px;
+}
+
+.footer {
+width: 700px;
+}
+#nav {
+	width: 500px;
+	margin: 0 auto;
+}

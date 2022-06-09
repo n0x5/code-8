@@ -1,0 +1,99 @@
+/* Block styles css */
+
+.is-style-nrotate {
+	width: 500px;
+    animation: spin 20s linear infinite;
+}
+
+@keyframes spin {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+
+.is-style-nghostly img {
+   filter: drop-shadow(red 16px 16px 20px) invert(75%);
+}
+
+.is-style-nsmoke {
+	
+	color: gray;
+	animation: nglitcha 5s linear infinite;
+}
+
+@keyframes nglitcha {
+  0% {
+	 filter: drop-shadow(1px 5px 1px gray);
+  }
+  60% {
+	    filter: drop-shadow(-5px 10px 1px gray);
+
+  }
+
+  100% {
+        filter: drop-shadow(-10px 15px 10px gray);
+
+  }
+}
+
+.is-style-npath1 {
+clip-path: polygon(100% 0%, 38% 14%, 100% 24%, 0% 30%, 0% 53%, 100% 28%, 2% 62%, 1% 68%, 100% 54%, 100% 75%, 1% 85%, 100% 96%);
+}
+
+.is-style-nshattered {
+   background-image: url("/wp-content/plugins/nox-custom-posts/images/nshattered.jpg");
+	filter: brightness(300%);
+  z-index: 500;
+}
+.is-style-nshattered img {
+	z-index: 100;
+   mix-blend-mode: overlay;
+}
+
+.is-style-nframe1 {
+	border: 10px solid transparent;
+	border-image: url("./images/vintage-frame-1175750.jpg") 70 round;
+}
+.is-style-nframe1 img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+.is-style-nframe2 {
+	border: 10px solid transparent;
+	border-image: url("./images/vintage-frame-1175743.jpg") 30 round;
+}
+.is-style-nframe2 img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+.is-style-nframe3 {
+	border: 10px solid transparent;
+	border-image: url("./images/vintage-frame-1175768.jpg") 30 round;
+}
+.is-style-nframe3 img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+.is-style-nframe4 {
+	border: 10px solid transparent;
+	border-image: url("./images/frame-2-1419840.jpg") 30 round;
+}
+.is-style-nbgimage {
+	background-image: url("./images/frame-2-1419840.jpg");
+	width: 100%;
+	height: 100%;
+}
+
+.is-style-nframe4 img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.is-style-ConBG1 {
+	background-color: white;
+}
