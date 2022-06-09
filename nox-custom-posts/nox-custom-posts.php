@@ -451,12 +451,12 @@ function breadcrumb_links($content) {
         $title = get_the_title($value);
         $page_link = get_page_link($value);
         $page_url = '<a href=' . $page_link .'>' . $title . '</a>';
-        $item_output1 = $page_url .' -> '. $item_output1;
+        $item_output1 = $page_url .'<div class="sep3"> -> </div>'. $item_output1;
     }
 
     $page_url2 = '<a href=' . $page_link2 .'>' . $title2 . '</a>';
     $page_url3 = '<a href=' . $url .'>' . 'Home' . '</a>';
-    $beforecontent = '<h2>' . $page_url3 .' -> '. $item_output1 . $title2 . '</h2>';
+    $beforecontent = '<h2>' . $page_url3 .'<div class="sep3"> -> </div>'. $item_output1 . $title2 . '</h2>';
     $aftercontent = '';
     $fullcontent = $beforecontent .'<br>' . '<br>' . $content . $aftercontent;
 
@@ -505,18 +505,25 @@ function n0x5_gallery() {
     $pages = get_pages(array('parent'  => get_the_id(), 'post_status' => array('publish', 'private')));
     $result = wp_list_pluck( $pages, 'ID' );
     foreach ($result as $thumb) {
+        $wp_query2 = new WP_Query(array(
+            'post_parent' => $thumb,
+            'post_type' => 'attachment',
+            'post_status' => 'inherit',
+            'post_mime_type' => 'image'
+            ));
+        $count = $wp_query2->found_posts;
         $perma = get_permalink($thumb);
         $title = get_the_title($thumb);
         $thumbnail = get_the_post_thumbnail($thumb, 'thumbnail');
         $sizes = wp_get_registered_image_subsizes();
         $img_width = $sizes['thumbnail']['width'];
         if (!empty(get_the_post_thumbnail($thumb, 'thumbnail') )) {
-            $thumb = '<div class="nox-item"><div class="n0x-lnk"><a href="'.$perma.'">'.$thumbnail.'</a></div><div class="n0x-title"><a href="'.$perma.'">'.$title.'</a></div></div>';
+            $thumb = '<div class="nox-item"><div class="n0x-lnk"><a href="'.$perma.'">'.$thumbnail.'</a></div><div class="n0x-title"><a href="'.$perma.'">'.$title . ' <br>(' . $count .  ' items)</a></div></div>';
             $lnks = $lnks . $thumb;
         }
         else {
             $thumb = '<a href="'.$perma.'">'.$title.'</a><br>';
-			$lnks = $lnks . $thumb;
+            $lnks = $lnks . $thumb;
         }
     }
     return '<div class="stuf">' . $lnks . '</div>';
